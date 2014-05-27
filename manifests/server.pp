@@ -6,8 +6,17 @@
 #
 #   class { 'jmeter::server': }
 #
-class jmeter::server($server_ip = '0.0.0.0') {
-  include jmeter
+class jmeter::server(
+  $server_ip = $jmeter::params::server_ip,
+  $plugins_version = $jmeter::params::plugins_version,
+  $version = $jmeter::params::version,
+) inherits jmeter::params {
+
+  class { 'jmeter':
+    jmeter_version         => $version,
+    jmeter_plugins_install => True,
+    jmeter_plugins_version => $plugins_version,
+  }
 
   $init_template = $osfamily ? {
     debian => 'jmeter/jmeter-init.erb',
