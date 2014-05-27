@@ -8,13 +8,14 @@
 #
 class jmeter::server(
   $server_ip = $jmeter::params::server_ip,
-  $plugins_version = $jmeter::params::plugins_version,
   $version = $jmeter::params::version,
+  $plugins_install = $jmeter::params::plugins_install,
+  $plugins_version = $jmeter::params::plugins_version,
 ) inherits jmeter::params {
 
   class { 'jmeter':
     jmeter_version         => $version,
-    jmeter_plugins_install => True,
+    jmeter_plugins_install => $plugins_install,
     jmeter_plugins_version => $plugins_version,
   }
 
@@ -42,6 +43,5 @@ class jmeter::server(
     ensure    => running,
     enable    => true,
     require   => File['/etc/init.d/jmeter'],
-    subscribe => [File['/etc/init.d/jmeter'], Exec['install-jmeter-plugins']],
   }
 }
